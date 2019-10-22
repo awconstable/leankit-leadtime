@@ -8,7 +8,9 @@ A script to calculate lead and cycle time from LeanKit boards
 2. Fire up Vagrant
    1. `vagrant up`
    2. `vagrant ssh`
-3. Run the node script
+3. Install dependencies
+   1. `npm install`
+4. Run the node script
    1. `node extract-leadtime.js --help`
 
 ## Usage
@@ -29,6 +31,14 @@ Options:
 
 Missing required arguments: account, email, password, boardId, month
 Please provide all arguments to work with this tool
+```
+
+## Example Output
+
+```bash
+Card Count : 54
+Average Lead Time (Days): 15.9
+Average Cycle Time (Days): 14.3
 ```
 
 ## Dependencies
