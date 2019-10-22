@@ -1,6 +1,6 @@
 # leankit-leadtime
 
-A script to calculate lead time from LeanKit boards
+A script to calculate lead and cycle time from LeanKit boards
 
 ## Getting Started
 
@@ -21,8 +21,8 @@ Options:
                       id>.leankit.com)                                [required]
   --email             The email address used to log in to LeanKit     [required]
   --password, --pass  The password used to log in to LeanKit          [required]
-  --boardId, --bid    The id of the board you want to calculate lead time for
-                                                                      [required]
+  --boardId, --bid    The id of the board you want to calculate lead and cycle
+                      time for                                        [required]
   --month, -m         The month as a date to lead time calculation during.
                       Format: YYYY-MM                                 [required]
   --help              Show help                                        [boolean]

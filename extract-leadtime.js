@@ -13,7 +13,7 @@ const argv = require('yargs')
 })
 .option('boardId', {
     alias: 'bid', 
-    describe:'The id of the board you want to calculate lead time for'
+    describe:'The id of the board you want to calculate lead and cycle time for'
 })
 .option('month', {
     alias: 'm', 
@@ -52,21 +52,25 @@ function processResponse(response){
 function processCards(cards) {
 
     var totalLeadTime = 0;
+    var totalCycleTime = 0;
     var averageLeadTime = 0;
     var cardCount = 0;
 
     for(i = 0; i < cards.length; i++){
-        var leadTime = processCard(cards[i]);
+        var stats = processCard(cards[i]);
 
-        if(typeof leadTime !== 'undefined'){
-            totalLeadTime += leadTime;
+        if(typeof stats !== 'undefined'){
+            totalLeadTime += stats.leadtime;
+            totalCycleTime += stats.cycletime;
             cardCount++;
         }
     }
     averageLeadTime = Math.round((totalLeadTime / cardCount) * 10) / 10;
+    averageCycleTime = Math.round((totalCycleTime / cardCount) * 10) / 10;
 
     console.log("Card Count : " + cardCount);
     console.log("Average Lead Time (Days): " + averageLeadTime);
+    console.log("Average Cycle Time (Days): " + averageCycleTime);
 }
 
 function inScopeCheck(cardFinishTime){
@@ -85,14 +89,18 @@ function inScopeCheck(cardFinishTime){
 function processCard(card){
     if(typeof card !== 'undefined' && card.actualFinish){
         const created = Date.parse(card.createdOn);
+        const start = Date.parse(card.actualStart);
         const finish = Date.parse(card.actualFinish);
         const leadTimeMillis = finish - created;
         const leadTimeSeconds = leadTimeMillis / 1000;
-        const leadTimeDays = leadTimeMillis / 1000 / 60 / 60 / 24;
+        const leadTimeDays = leadTimeSeconds / 60 / 60 / 24;
+        const cycleTimeMillis = finish - start;
+        const cycleTimeSeconds = cycleTimeMillis / 1000;
+        const cycleTimeDays = cycleTimeSeconds / 60 / 60 / 24;
 
         //Filter out cards less a lead time of less than 30 mins (It looks like LeanKit does this in it's cycle time chart)
         if(inScopeCheck(finish) && leadTimeSeconds > (60 * 30)){
-            return leadTimeDays;
+            return { leadtime: leadTimeDays, cycletime: cycleTimeDays };
         }
     };
 }
